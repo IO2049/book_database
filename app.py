@@ -127,12 +127,18 @@ def app():
                 session.commit()
                 print('Book Added')
                 time.sleep(1.5)
-            case "2'":
-                return "2"
+
+            case "2":
+                for book in session.query(Book):
+                    print(f'{book.id} | {book.title} | {book.author} | {book.published_date} | {book.price}')
+                input('\nPress enter to return to the main menu.')
+
             case "3":
-                return "3"
+                return '3'
+
             case "4":
-                return "4"
+                return '4'
+
             case "5":
                 return "5"
 
