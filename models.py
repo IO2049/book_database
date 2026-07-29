@@ -1,6 +1,6 @@
 #[X] create a database - books.db
-#[] create a model
-#[] title, author, date published, price
+#[X] create a model
+#[X] title, author, date published, price
 
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, sessionmaker
