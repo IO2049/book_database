@@ -2,7 +2,7 @@
 #[X] create a model
 #[X] title, author, date published, price
 
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 engine = create_engine('sqlite:///books.db', echo=False)
@@ -17,7 +17,7 @@ class Book(Base):
     id = Column(Integer, primary_key=True)
     title = Column('Title', String)
     author = Column('Author', String)
-    published_date = Column('Published', Integer)
+    published_date = Column('Published', Date)
     price = Column('Price', Integer)
 
     def __repr__(self):
