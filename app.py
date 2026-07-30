@@ -78,6 +78,32 @@ def clean_price(price_str):
     else:
          return int(price_float * 100)       
 
+def clean_id(id_str, options):
+    try:
+        book_id = int(id_str)
+    except ValueError:
+        input(
+        '''
+        \n****** INPUT ERROR ******
+        \rThe id should be a number.
+        \rPress enter to try again
+        \r************************'''
+    )
+        return
+    else:
+        if book_id in options:
+            return book_id
+        else:
+            input(
+            f'''
+            \n****** INPUT ERROR ******
+            \rOptions: {options}.
+            \rPress enter to try again
+            \r************************'''
+        )
+            return
+
+
 def add_csv():
     with open('suggested_books.csv') as file:
         csvfile = csv.reader(file)
@@ -110,17 +136,25 @@ def app():
 
                 date_error = True
                 while date_error:
-                    date = input('Published Date (Ex: October 25, 2017): ')
+                    date = input('Published Date (Ex: October 25, 2017) or "exit": ')
+                    if date.lower() == 'exit':
+                        break
                     date = clean_date(date)
-                    if type(date) == datetime.date:
+                if type(date) == str and date.lower() == 'exit':
+                    continue
+                    if type(date) == datetime.date or type(date) == 'EXIT':
                         date_error = False
 
                 price_error = True
                 while price_error:
-                    price = input('Price (Ex: 29.99): ')
+                    price = input('Price (Ex: 29.99) or "exit": ')
+                    if price.lower() == "exit":
+                        break
                     price = clean_price(price)
                     if type(price) == int:
                         price_error = False
+                if type(price) == str and price.lower() == 'exit':
+                    continue    
                 new_book = Book(title = title, author = author,
                                 published_date = date, price = price)
                 session.add(new_book)
@@ -134,13 +168,26 @@ def app():
                 input('\nPress enter to return to the main menu.')
 
             case "3":
-                return '3'
-
+                id_options = [book.id for book in session.query(Book).all()]
+                id_error = True
+                while id_error:
+                    id_choice = input(f'''
+                        \nId Options: {id_options}
+                        \rBook id: ''')
+                    id_choice = clean_id(id_choice, id_options)
+                    if type(id_choice) == int:
+                        id_error = False
+                the_book = session.query(Book).filter(Book.id==id_choice).first()
+                print(f'''
+                        \n{the_book.title} by {the_book.author}
+                        \rPublished: {the_book.published_date}
+                        \rPrice: ${the_book.price / 100}''')
+                input('\nPress enter to return to the main menu')
             case "4":
                 return '4'
 
             case "5":
-                return "5"
+                app_running = False
 
 
 if __name__ == '__main__':
